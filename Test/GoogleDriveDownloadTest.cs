@@ -6,17 +6,21 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using System.Threading.Tasks;
+using Google.Apis.Download;
 
-public class GoogleDriveConnectionTest : MonoBehaviour
+public class GoogleDriveDownloadTest : MonoBehaviour
 {
     // credential json 파일을 Resources 폴더 등에 넣어두고
     // 아래 필드에 경로를 지정(또는 인스펙터에서 할당)합니다.
     [Header("Google OAuth Credentials JSON (Resources 폴더 경로 등)")]
     [SerializeField] private string _credentialsFilePath = "credentials.json";
 
-    // 트리를 출력하고 싶은 Google Drive 폴더 ID
-    [Header("Google Drive Folder ID")]
-    [SerializeField] private string _targetFolderId = "YOUR_FOLDER_ID";
+    // 타겟 Google Drive 폴더 ID
+    [Header("Google Drive File ID")]
+    [SerializeField] private string _driveFileId = "YOUR_FOLDER_ID";
+
+    [Header("Unity Drive Folder Path")]
+    [SerializeField] private string _unityFolderPath = "YOUR_FOLDER_ID";
 
     // Google Drive API 서비스 객체
     private DriveService _driveService;
@@ -28,8 +32,8 @@ public class GoogleDriveConnectionTest : MonoBehaviour
         _driveService = await AuthenticateGoogleDrive(_credentialsFilePath);
 
         // 2) 폴더 트리 구조 출력
-        Debug.Log($"==== Drive Folder Tree for Folder ID: {_targetFolderId} ====");
-        await PrintFolderTree(_targetFolderId, "");
+        Debug.Log($"==== File ID: {_driveFileId} ====");
+        await DownloadFile(_driveFileId, "test.png", _unityFolderPath);
     }
 
     /// <summary>
@@ -70,42 +74,54 @@ public class GoogleDriveConnectionTest : MonoBehaviour
         return service;
     }
 
-    /// <summary>
-    /// 특정 폴더 ID 하위의 트리 구조를 재귀적으로 탐색하여 출력하는 메서드
-    /// </summary>
-    /// <param name="folderId">트리 탐색을 시작할 폴더 ID</param>
-    /// <param name="indent">현재 들여쓰기 문자열</param>
-    private async Task PrintFolderTree(string folderId, string indent)
+    private async Task DownloadFile(string fileId, string fileName, string localPath)
     {
         if (_driveService == null)
         {
-            Debug.LogError("[GoogleDriveTreeViewer] DriveService is null. Cannot list files.");
+            Debug.LogError("[GoogleDriveFileDownloader] DriveService is null. Cannot download file.");
             return;
         }
 
-        // 해당 폴더 하위의 파일/폴더 목록 가져오기
-        var request = _driveService.Files.List();
-        request.Q = $"'{folderId}' in parents and trashed=false";
-        request.Fields = "files(id, name, mimeType)";
+        // 1. 다운로드 요청
+        var request = _driveService.Files.Get(fileId);
+        var downloader = request.MediaDownloader;
 
-        var result = await request.ExecuteAsync();
+        var absPath = Application.dataPath + "/" + localPath + "/" + fileName;
 
-        if (result.Files == null || result.Files.Count == 0)
+        // (선택) 다운로드 진행 상황 모니터링
+        downloader.ProgressChanged += Download_ProgressChanged;
+
+        // 2. 메모리 스트림에 데이터를 받는다
+        using var memoryStream = new MemoryStream();
+        var result = await request.DownloadAsync(memoryStream);
+
+        if (result.Status == DownloadStatus.Completed)
         {
-            Debug.Log($"{indent}- (No files found)");
-            return;
+            // 3. 로컬 파일로 저장
+            File.WriteAllBytes(absPath, memoryStream.ToArray());
+            Debug.Log($"[GoogleDriveFileDownloader] Download complete: {localPath}");
         }
-
-        foreach (var file in result.Files)
+        else
         {
-            bool isFolder = file.MimeType == "application/vnd.google-apps.folder";
-            Debug.Log($"{indent}- {file.Name} ({file.Id}) {(isFolder ? "[Folder]" : "")}");
+            // 실패 또는 부분완료
+            Debug.LogWarning($"Download ended with status: {result.Status}, Exception: {result.Exception}");
+        }
+    }
 
-            // 하위 폴더라면 재귀적으로 탐색
-            if (isFolder)
-            {
-                await PrintFolderTree(file.Id, indent + "/" + file.Name);
-            }
+    // 다운로드 진행 상황 체크 (선택)
+    private void Download_ProgressChanged(IDownloadProgress progress)
+    {
+        switch (progress.Status)
+        {
+            case DownloadStatus.Downloading:
+                Debug.Log($"Downloading... {progress.BytesDownloaded} bytes");
+                break;
+            case DownloadStatus.Completed:
+                Debug.Log("Download completed.");
+                break;
+            case DownloadStatus.Failed:
+                Debug.LogError($"Download failed. {progress.Exception}");
+                break;
         }
     }
 }
