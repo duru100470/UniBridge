@@ -4,3 +4,7 @@
 #
 /[Ss]cenes/
 *.meta
+Packages
+NuGet.config
+packages.config
+credentials.json
