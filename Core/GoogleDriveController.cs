@@ -14,7 +14,6 @@ namespace UniBridge.Core
 
         public GoogleDriveController()
         {
-            // JSON credential 파일 로드
             string fullPath = Path.Combine(Application.dataPath, _configFile);
             if (!File.Exists(fullPath))
             {
