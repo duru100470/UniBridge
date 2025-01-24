@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Text;
+using UnityEditor.Build;
 
 namespace UniBridge.Core
 {
@@ -31,5 +34,16 @@ namespace UniBridge.Core
         {
             return (a.Id == b.Id || !isExact) && a.Name == b.Name && a.Path == b.Path && (a.MimeType == b.MimeType || !isExact);
         }
+    }
+
+    public class FileInfoPathComparer : IEqualityComparer<FileInfo>
+    {
+        public bool Equals(FileInfo a, FileInfo b)
+        {
+            if (Object.ReferenceEquals(a, b)) return true;
+            return a.Path.Equals(b.Path);
+        }
+
+        public int GetHashCode(FileInfo obj) => obj.Path.GetHashCode();
     }
 }

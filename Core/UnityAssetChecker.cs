@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -27,16 +28,17 @@ namespace UniBridge.Core
             _unityFolderPath = config.UnityFolderPath;
         }
 
-        public List<FileInfo> CheckMissingAssetFiles(List<FileInfo> driveFiles)
+        public List<FileInfo> CheckMissingAssetFiles(List<FileInfo> driveFileList)
         {
-            List<FileInfo> ret = new List<FileInfo>();
-
-            return ret;
+            var unityAssetList = GetUnityAssetFiles();
+            var diff = driveFileList.Except(unityAssetList, new FileInfoPathComparer());
+            return diff.ToList();
         }
 
-        public List<FileInfo> RefreshUnityAssetFiles()
+        public List<FileInfo> GetUnityAssetFiles()
         {
             Debug.Log($"[UniBridge] Finding assets at {_unityFolderPath}");
+
             var ret = GetUnityAssetFilesRecurse();
             return ret;
         }

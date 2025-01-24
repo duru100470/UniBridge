@@ -11,7 +11,7 @@ namespace UniBridge.Test
         private void Test()
         {
             UnityAssetChecker checker = new UnityAssetChecker();
-            var ret = checker.RefreshUnityAssetFiles();
+            var ret = checker.GetUnityAssetFiles();
 
             foreach (var file in ret)
             {
