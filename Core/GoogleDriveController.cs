@@ -22,7 +22,7 @@ namespace UniBridge.Core
             string fullPath = Path.Combine(Application.dataPath, _configFile);
             if (!File.Exists(fullPath))
             {
-                Debug.LogError($"[GoogleDriveTreeViewer] Config file not found: {fullPath}");
+                Debug.LogError($"[UniBridge] Config file not found: {fullPath}");
                 return;
             }
 

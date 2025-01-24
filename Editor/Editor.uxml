@@ -6,6 +6,6 @@
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(255, 167, 167, 0.4); height: 70px; position: absolute; bottom: 0; width: 100%;">
         <ui:Button text="Refresh" parse-escape-sequences="true" display-tooltip-when-elided="true" />
         <ui:Button text="Start" parse-escape-sequences="true" display-tooltip-when-elided="true" name="start-btn" />
-        <ui:ProgressBar value="22" title="Download..." name="progress-bar" />
+        <ui:ProgressBar value="0" title="Download..." name="progress-bar" />
     </ui:VisualElement>
 </ui:UXML>
