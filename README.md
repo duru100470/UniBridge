@@ -10,3 +10,7 @@
 }
 ```
 4. Tools/UniBridge에서 Start 버튼 누르면 끝
+
+## 설치법
+1. Package Manager/Add package from git URL.. -> https://github.com/duru100470/UniBridge.git
+2. CLI 열고 ```openupm add com.duru100470.unibridge``` 입력
