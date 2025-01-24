@@ -9,3 +9,4 @@ NuGet.config
 packages.config
 credentials.json
 Sprites
+unibridge-config.json

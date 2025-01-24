@@ -26,5 +26,10 @@ namespace UniBridge.Core
                 .Append(IsFolder ? "Directory" : "File")
                 .ToString();
         }
+
+        public static bool Compare(FileInfo a, FileInfo b, bool isExact = false)
+        {
+            return (a.Id == b.Id || !isExact) && a.Name == b.Name && a.Path == b.Path && (a.MimeType == b.MimeType || !isExact);
+        }
     }
 }

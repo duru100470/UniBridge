@@ -27,7 +27,14 @@ namespace UniBridge.Core
             _unityFolderPath = config.UnityFolderPath;
         }
 
-        public List<FileInfo> GetUnityAssetFiles()
+        public List<FileInfo> CheckMissingAssetFiles(List<FileInfo> driveFiles)
+        {
+            List<FileInfo> ret = new List<FileInfo>();
+
+            return ret;
+        }
+
+        public List<FileInfo> RefreshUnityAssetFiles()
         {
             Debug.Log($"[UniBridge] Finding assets at {_unityFolderPath}");
             var ret = GetUnityAssetFilesRecurse();
