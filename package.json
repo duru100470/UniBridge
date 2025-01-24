@@ -1,0 +1,10 @@
+{
+  "name": "com.duru100470.unibridge",
+  "version": "0.1.0",
+  "displayName": "UniBridge",
+  "description": "Synchronize your unity and google drive",
+  "unity": "2022.3",
+  "author": {
+    "name": "Duru100470"
+  }
+}

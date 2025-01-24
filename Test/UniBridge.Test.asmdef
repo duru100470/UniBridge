@@ -1,0 +1,16 @@
+{
+    "name": "UniBridge.Test",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2bc79ceeedc4c114fa83a1016c31f255"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
