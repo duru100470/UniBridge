@@ -2,11 +2,5 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
-/[Ss]cenes/
-*.meta
-Packages
-NuGet.config
-packages.config
 credentials.json
-Sprites
 unibridge-config.json
