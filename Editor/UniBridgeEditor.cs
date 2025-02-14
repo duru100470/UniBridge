@@ -13,6 +13,7 @@ namespace UniBridge.Editor
         private TreeView _treeView;
         private Button _startBtn;
         private ProgressBar _progress;
+        private Toggle _overwrite;
 
         [MenuItem("Tools/UniBridge")]
         public static void ShowWindow()
@@ -38,6 +39,7 @@ namespace UniBridge.Editor
             _treeView = rootVisualElement.Q<TreeView>("google-tree");
             _startBtn = rootVisualElement.Q<Button>("start-btn");
             _progress = rootVisualElement.Q<ProgressBar>("progress-bar");
+            _overwrite = rootVisualElement.Q<Toggle>("overwrite-toggle");
 
             _startBtn.clicked += () =>
             {
@@ -66,12 +68,20 @@ namespace UniBridge.Editor
             _treeView.bindItem = (VisualElement element, int index) =>
                 (element as Label).text = _treeView.GetItemDataForIndex<string>(index);
 
-            UnityAssetChecker checker = new UnityAssetChecker();
-            var ret = checker.CheckMissingAssetFiles(driveFiles);
-
-            await controller.DownloadFileList(ret);
+            if (!_overwrite.value)
+            {
+                UnityAssetChecker checker = new UnityAssetChecker();
+                var ret = checker.CheckMissingAssetFiles(driveFiles);
+                await controller.DownloadFileList(ret);
+            }
+            else
+            {
+                await controller.DownloadFileList(driveFiles);
+            }
 
             _progress.value = 100;
+
+            AssetDatabase.Refresh();
         }
     }
 }

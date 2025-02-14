@@ -1,11 +1,56 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <uie:Toolbar />
-    <ui:VisualElement style="flex-grow: 1; background-color: rgba(100, 88, 255, 0.07); flex-direction: row; height: 778px;">
-        <ui:TreeView auto-expand="true" show-border="true" name="google-tree" reorderable="false" selection-type="Single" fixed-item-height="15" />
-    </ui:VisualElement>
-    <ui:VisualElement style="flex-grow: 1; background-color: rgba(255, 167, 167, 0.4); height: 70px; position: absolute; bottom: 0; width: 100%;">
-        <ui:Button text="Refresh" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-        <ui:Button text="Start" parse-escape-sequences="true" display-tooltip-when-elided="true" name="start-btn" />
-        <ui:ProgressBar value="0" title="Download..." name="progress-bar" />
+    <!-- 루트: 위에서 아래 방향 배치 -->
+    <ui:VisualElement style="flex-direction: column; width: 100%; height: 100%;">
+        
+        <!-- 상단 툴바 -->
+        <uie:Toolbar style="flex: none;" />
+        
+        <!-- 가운데 트리 뷰 영역 -->
+        <ui:VisualElement style="
+            flex-grow: 1;
+            background-color: rgba(100, 88, 255, 0.07);
+            flex-direction: row;">
+            <ui:TreeView 
+                auto-expand="true"
+                show-border="true"
+                name="google-tree"
+                reorderable="false"
+                selection-type="Single"
+                fixed-item-height="15" />
+        </ui:VisualElement>
+
+        <!-- 하단 버튼/토글/ProgressBar 영역 -->
+        <ui:VisualElement style="
+            flex-direction: row;
+            /* 필요하다면 줄어들지 않고(아래쪽이 짤리지 않도록) 보장할 최소 높이 */
+            min-height: 70px; 
+            /* 자동 줄바꿈을 허용하지 않으려면 wrap: no-wrap (기본값) */
+            /* 수직 중앙 정렬 */
+            align-items: center;
+            /* 가로 방향으로 일정 간격 벌리거나, 정렬이 필요하다면 justify-content 사용 가능 */
+            padding-left: 10px;
+            padding-right: 10px;
+            background-color: rgba(255, 167, 167, 0.4);">
+            
+            <ui:Button text="Refresh" 
+                       parse-escape-sequences="true" 
+                       display-tooltip-when-elided="true" />
+            
+            <ui:Button text="Start" 
+                       parse-escape-sequences="true"
+                       display-tooltip-when-elided="true" 
+                       name="start-btn" />
+            
+            <!-- Overwrite Toggle 추가 -->
+            <ui:Toggle text="Overwrite" 
+                       name="overwrite-toggle" />
+
+            <!-- ProgressBar가 칸을 더 쓰도록 하고 싶다면 flex-grow: 1; 추가 가능 -->
+            <ui:ProgressBar value="0" 
+                            title="Download..." 
+                            name="progress-bar" />
+        </ui:VisualElement>
+
     </ui:VisualElement>
 </ui:UXML>
+
