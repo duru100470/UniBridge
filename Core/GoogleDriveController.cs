@@ -7,28 +7,25 @@ using Google.Apis.Download;
 using Google.Apis.Drive.v3;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEditor;
 
 namespace UniBridge.Core
 {
     public class GoogleDriveController : IDriveFileController
     {
-        private readonly string _configFile = "unibridge-config.json";
+        private readonly string _configFile = "config.json";
         private readonly string _targetFolderId = null;
         private readonly string _unityFolderPath = null;
 
-        public GoogleDriveController()
+        public GoogleDriveController(string configPath)
         {
-
-            string fullPath = Path.Combine(Application.dataPath, _configFile);
-            if (!File.Exists(fullPath))
+            if (!File.Exists(configPath))
             {
-                Debug.LogError($"[UniBridge] Config file not found: {fullPath}");
+                Debug.LogWarning($"Config file not found: {configPath}");
                 return;
             }
 
-            StreamReader reader = new StreamReader(fullPath);
-            var json = reader.ReadToEnd();
-            reader.Close();
+            string json = File.ReadAllText(configPath);
 
             var config = JsonConvert.DeserializeObject<Config>(json);
             _targetFolderId = config.TargetFolderId;
